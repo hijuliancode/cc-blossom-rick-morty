@@ -2,11 +2,12 @@ import { useQuery } from "@apollo/client/react";
 import { GET_CHARACTERS } from "../../graphql/queries/get-characters";
 import type { GetCharactersQuery } from "../../types/__generated__/graphql";
 import { ErrorBanner } from "./error-banner";
+import { LoadingSpinner } from "./loading-spinner";
 
 export const DisplayCharacters = () => {
   const { loading, error, data } = useQuery<GetCharactersQuery>(GET_CHARACTERS);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingSpinner />;
 
   if (error)
     return (
