@@ -1,9 +1,9 @@
-import { DisplayLocations } from "./shared/components/display-locations";
+import { DisplayCharacters } from "./shared/components/display-characters";
 
 function App() {
   return (
     <>
-      <DisplayLocations />
+      <DisplayCharacters />
     </>
   );
 }

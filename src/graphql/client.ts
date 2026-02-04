@@ -3,6 +3,6 @@ import { InMemoryCache } from "@apollo/client";
 import { ApolloClient } from "@apollo/client";
 
 export const client = new ApolloClient({
-  link: new HttpLink({ uri: "https://flyby-router-demo.herokuapp.com/" }),
-  cache: new InMemoryCache
-})
+  link: new HttpLink({ uri: "https://rickandmortyapi.com/graphql" }),
+  cache: new InMemoryCache()
+});
