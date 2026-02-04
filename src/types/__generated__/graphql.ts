@@ -200,7 +200,9 @@ export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
 
-export type GetCharactersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetCharactersQueryVariables = Exact<{
+  filter?: InputMaybe<FilterCharacter>;
+}>;
 
 
-export type GetCharactersQuery = { characters: { __typename: 'Characters', results: Array<{ __typename: 'Character', id: string | null, name: string | null, species: string | null, status: string | null, gender: string | null } | null> | null } | null };
+export type GetCharactersQuery = { characters: { __typename: 'Characters', results: Array<{ __typename: 'Character', id: string | null, name: string | null, species: string | null, status: string | null, gender: string | null, image: string | null } | null> | null } | null };
