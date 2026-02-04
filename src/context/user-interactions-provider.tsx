@@ -1,30 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
-
-export type Comment = {
-  id: string;
-  text: string;
-  createdAt: string;
-};
-
-type UserInteractionsContextType = {
-  favorites: string[];
-  hiddenCharacters: string[];
-  comments: Record<string, Comment[]>;
-  toggleFavorite: (characterId: string) => void;
-  hideCharacter: (characterId: string) => void;
-  addComment: (characterId: string, text: string) => void;
-  deleteComment: (characterId: string, commentId: string) => void;
-};
-
-const UserInteractionsContext = createContext<
-  UserInteractionsContextType | undefined
->(undefined);
+import { useEffect, useState, type ReactNode } from "react";
+import { UserInteractionsContext } from "./user-interactions-context";
+import type { Comment } from "../types/user-interactions";
 
 const STORAGE_KEY = "rick-morty-user-interactions";
 
@@ -114,14 +90,4 @@ export const UserInteractionsProvider = ({
       {children}
     </UserInteractionsContext.Provider>
   );
-};
-
-export const useUserInteractions = () => {
-  const context = useContext(UserInteractionsContext);
-  if (!context) {
-    throw new Error(
-      "useUserInteractions must be used within a UserInteractionsProvider",
-    );
-  }
-  return context;
 };

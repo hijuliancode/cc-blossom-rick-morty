@@ -15,10 +15,9 @@ export type Scalars = {
   Upload: { input: unknown; output: unknown; }
 };
 
-export enum CacheControlScope {
-  Private = 'PRIVATE',
-  Public = 'PUBLIC'
-}
+export type CacheControlScope =
+  | 'PRIVATE'
+  | 'PUBLIC';
 
 export type Character = {
   __typename: 'Character';
@@ -199,6 +198,13 @@ export type QueryLocationsArgs = {
 export type QueryLocationsByIdsArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
+
+export type GetCharacterQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCharacterQuery = { character: { __typename: 'Character', id: string | null, name: string | null, species: string | null, status: string | null, gender: string | null, image: string | null, type: string | null } | null };
 
 export type GetCharactersQueryVariables = Exact<{
   filter?: InputMaybe<FilterCharacter>;
