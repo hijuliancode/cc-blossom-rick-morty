@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { UserInteractionsProvider } from "./user-interactions-provider";
+import { UserInteractionsProvider } from "../user-interactions-provider";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import type { ReactNode } from "react";
 

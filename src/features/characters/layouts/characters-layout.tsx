@@ -17,7 +17,7 @@ export const CharactersLayout = () => {
 
       {/* Main Content: Detail or Placeholder */}
       <main
-        className={`flex-1 h-full overflow-hidden ${
+        className={`flex-1 h-full overflow-hidden shadow-xl ${
           !id ? "hidden md:block" : "block"
         }`}
       >
