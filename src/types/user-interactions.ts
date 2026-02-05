@@ -11,5 +11,6 @@ export type UserInteractionsContextType = {
   toggleFavorite: (characterId: string) => void;
   hideCharacter: (characterId: string) => void;
   addComment: (characterId: string, text: string) => void;
+  editComment: (characterId: string, commentId: string, text: string) => void;
   deleteComment: (characterId: string, commentId: string) => void;
 };

@@ -1,8 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { UserInteractionsContext } from "./user-interactions-context";
 import type { Comment } from "../types/user-interactions";
-
-const STORAGE_KEY = "rick-morty-user-interactions";
+import { USER_INTERACTIONS_STORAGE_KEY } from "../shared/constants/local-storage";
 
 type StoredData = {
   favorites: string[];
@@ -23,7 +22,7 @@ export const UserInteractionsProvider = ({
 }) => {
   const [data, setData] = useState<StoredData>(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(USER_INTERACTIONS_STORAGE_KEY);
       return stored ? JSON.parse(stored) : INITIAL_DATA;
     } catch {
       return INITIAL_DATA;
@@ -31,7 +30,7 @@ export const UserInteractionsProvider = ({
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(USER_INTERACTIONS_STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 
   const toggleFavorite = (characterId: string) => {
@@ -77,6 +76,19 @@ export const UserInteractionsProvider = ({
     }));
   };
 
+  const editComment = (characterId: string, commentId: string, text: string) => {
+    setData((prev) => ({
+      ...prev,
+      comments: {
+        ...prev.comments,
+        [characterId]:
+          prev.comments[characterId]?.map((c) =>
+            c.id === commentId ? { ...c, text } : c
+          ) || [],
+      },
+    }));
+  };
+
   return (
     <UserInteractionsContext.Provider
       value={{
@@ -85,6 +97,7 @@ export const UserInteractionsProvider = ({
         hideCharacter,
         addComment,
         deleteComment,
+        editComment,
       }}
     >
       {children}
