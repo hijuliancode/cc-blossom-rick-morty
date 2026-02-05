@@ -48,14 +48,14 @@ describe("UserInteractionsContext", () => {
     expect(result.current.favorites).not.toContain("1");
   });
 
-  it("should hide characters", () => {
+  it("should delete characters", () => {
     const { result } = renderHook(() => useUserInteractions(), { wrapper });
 
     act(() => {
-      result.current.hideCharacter("1");
+      result.current.deleteCharacter("1");
     });
 
-    expect(result.current.hiddenCharacters).toContain("1");
+    expect(result.current.deletedCharacters).toContain("1");
   });
 
   it("should add, edit and delete comments", () => {

@@ -11,13 +11,13 @@ import { USER_INTERACTIONS_STORAGE_KEY } from "@/shared/constants/local-storage"
 
 type StoredData = {
   favorites: string[];
-  hiddenCharacters: string[];
+  deletedCharacters: string[];
   comments: Record<string, Comment[]>;
 };
 
 const INITIAL_DATA: StoredData = {
   favorites: [],
-  hiddenCharacters: [],
+  deletedCharacters: [],
   comments: {},
 };
 
@@ -48,10 +48,10 @@ export const UserInteractionsProvider = ({
     }));
   }, []);
 
-  const hideCharacter = useCallback((characterId: string) => {
+  const deleteCharacter = useCallback((characterId: string) => {
     setData((prev) => ({
       ...prev,
-      hiddenCharacters: [...prev.hiddenCharacters, characterId],
+      deletedCharacters: [...prev.deletedCharacters, characterId],
     }));
   }, []);
 
@@ -105,7 +105,7 @@ export const UserInteractionsProvider = ({
     () => ({
       ...data,
       toggleFavorite,
-      hideCharacter,
+      deleteCharacter,
       addComment,
       deleteComment,
       editComment,
@@ -113,7 +113,7 @@ export const UserInteractionsProvider = ({
     [
       data,
       toggleFavorite,
-      hideCharacter,
+      deleteCharacter,
       addComment,
       deleteComment,
       editComment,

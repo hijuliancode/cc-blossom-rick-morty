@@ -15,7 +15,7 @@ export const ButtonDelete: FC<ButtonDeleteProps> = ({
   return (
     <button
       onClick={onClick}
-      aria-label="Hide character"
+      aria-label="Delete character"
       className={cn(className)}
     >
       <svg

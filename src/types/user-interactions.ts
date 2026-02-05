@@ -6,10 +6,10 @@ export type Comment = {
 
 export type UserInteractionsContextType = {
   favorites: string[];
-  hiddenCharacters: string[];
+  deletedCharacters: string[];
   comments: Record<string, Comment[]>;
   toggleFavorite: (characterId: string) => void;
-  hideCharacter: (characterId: string) => void;
+  deleteCharacter: (characterId: string) => void;
   addComment: (characterId: string, text: string) => void;
   editComment: (characterId: string, commentId: string, text: string) => void;
   deleteComment: (characterId: string, commentId: string) => void;

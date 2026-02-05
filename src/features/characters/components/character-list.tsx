@@ -16,7 +16,7 @@ import { CharacterListGrouped } from "./character-list-grouped";
 
 export const CharacterList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { hiddenCharacters, favorites } = useUserInteractions();
+  const { deletedCharacters, favorites } = useUserInteractions();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const {
     isOpen: isWelcomeModalOpen,
@@ -96,7 +96,7 @@ export const CharacterList = () => {
     otherCharacters: otherResults,
   } = useCharacterProcessing({
     data: dataFiltered,
-    hiddenCharacters,
+    deletedCharacters,
     favorites,
     sortOrder,
   });

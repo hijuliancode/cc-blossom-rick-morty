@@ -5,14 +5,14 @@ type SortOrder = "asc" | "desc" | string | null;
 
 interface UseCharacterProcessingProps {
   data: GetCharactersQuery | undefined;
-  hiddenCharacters: string[];
+  deletedCharacters: string[];
   favorites: string[];
   sortOrder: SortOrder;
 }
 
 export const useCharacterProcessing = ({
   data,
-  hiddenCharacters,
+  deletedCharacters,
   favorites,
   sortOrder,
 }: UseCharacterProcessingProps) => {
@@ -20,7 +20,7 @@ export const useCharacterProcessing = ({
     const chars =
       data?.characters?.results?.filter(
         (char): char is Character =>
-          !!char && !hiddenCharacters.includes(char.id || ""),
+          !!char && !deletedCharacters.includes(char.id || ""),
       ) || [];
 
     if (sortOrder) {
@@ -34,7 +34,7 @@ export const useCharacterProcessing = ({
     }
 
     return chars;
-  }, [data, hiddenCharacters, sortOrder]);
+  }, [data, deletedCharacters, sortOrder]);
 
   const { starredCharacters, otherCharacters } = useMemo(() => {
     const starred: Character[] = [];

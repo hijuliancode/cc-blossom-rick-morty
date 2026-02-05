@@ -15,7 +15,7 @@ import emptyStateImage from "@/assets/rick-and-morty.svg";
 export const CharacterDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { favorites, toggleFavorite, hideCharacter } = useUserInteractions();
+  const { favorites, toggleFavorite, deleteCharacter } = useUserInteractions();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { loading, error, data } = useQuery<GetCharacterQuery>(GET_CHARACTER, {
@@ -25,12 +25,12 @@ export const CharacterDetail = () => {
 
   const character = data?.character;
 
-  const handleHideCharacter = useCallback(() => {
+  const handleDeleteCharacter = useCallback(() => {
     if (character?.id) {
-      hideCharacter(character.id);
+      deleteCharacter(character.id);
       navigate("/characters");
     }
-  }, [character, hideCharacter, navigate]);
+  }, [character, deleteCharacter, navigate]);
 
   if (!id) {
     return (
@@ -180,10 +180,10 @@ export const CharacterDetail = () => {
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleHideCharacter}
-        title="Hide Character"
-        message="Are you sure you want to hide this character? It will be removed from your list view."
-        confirmText="Hide"
+        onConfirm={handleDeleteCharacter}
+        title="Delete Character"
+        message="Are you sure you want to delete this character?"
+        confirmText="Delete"
         variant="danger"
       />
     </div>
