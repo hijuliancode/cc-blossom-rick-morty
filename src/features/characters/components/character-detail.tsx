@@ -11,10 +11,12 @@ import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { CommentsSection } from "./comments-section";
 import { ConfirmationModal } from "@/shared/components/confirmation-modal";
 import emptyStateImage from "@/assets/rick-and-morty.svg";
+import { PageTransition } from "@/shared/components/page-transition";
 
 export const CharacterDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const { favorites, toggleFavorite, deleteCharacter } = useUserInteractions();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -34,7 +36,7 @@ export const CharacterDetail = () => {
 
   if (!id) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-gray-500 bg-white p-8">
+      <PageTransition className="h-full flex flex-col items-center justify-center text-gray-500 bg-white p-8">
         <div className="w-32 h-32 mb-4 opacity-50 bg-gray-200 rounded-full flex items-center justify-center">
           <img
             src={emptyStateImage}
@@ -46,7 +48,7 @@ export const CharacterDetail = () => {
         <p className="text-sm">
           Choose a character from the list to see details
         </p>
-      </div>
+      </PageTransition>
     );
   }
 
@@ -70,7 +72,10 @@ export const CharacterDetail = () => {
   const isFavorite = character.id ? favorites.includes(character.id) : false;
 
   return (
-    <div className="h-full bg-white p-8 overflow-y-auto">
+    <PageTransition
+      key={character.id}
+      className="h-full bg-white p-8 overflow-y-auto"
+    >
       {/* Mobile Back Button */}
       <Link
         to="/characters"
@@ -186,6 +191,6 @@ export const CharacterDetail = () => {
         confirmText="Delete"
         variant="danger"
       />
-    </div>
+    </PageTransition>
   );
 };
