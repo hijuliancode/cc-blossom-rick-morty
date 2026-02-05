@@ -204,7 +204,7 @@ export type GetCharacterQueryVariables = Exact<{
 }>;
 
 
-export type GetCharacterQuery = { character: { __typename: 'Character', id: string | null, name: string | null, species: string | null, status: string | null, gender: string | null, image: string | null, type: string | null } | null };
+export type GetCharacterQuery = { character: { __typename: 'Character', id: string | null, name: string | null, species: string | null, status: string | null, gender: string | null, image: string | null, type: string | null, location: { __typename: 'Location', name: string | null } | null, origin: { __typename: 'Location', name: string | null } | null, episode: Array<{ __typename: 'Episode', id: string | null, episode: string | null, name: string | null } | null> } | null };
 
 export type GetCharactersQueryVariables = Exact<{
   filter?: InputMaybe<FilterCharacter>;

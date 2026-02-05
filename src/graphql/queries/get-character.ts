@@ -10,6 +10,17 @@ export const GET_CHARACTER = gql`
       gender
       image
       type
+      location {
+        name
+      }
+      origin {
+        name
+      }
+      episode {
+        id
+        episode
+        name
+      }
     }
   }
 `;
