@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { GET_CHARACTERS } from "@/graphql/queries/get-characters";
 import type { GetCharactersQuery } from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
-import { LoadingSpinner } from "@/shared/components/loading-spinner";
 import { CharacterListItem } from "./character-list-item";
 import { FilterModal } from "./filter-modal";
+import { CharacterListSkeleton } from "./character-list-skeleton";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { useDebounce } from "@/shared/hooks/use-debounce";
 import { WelcomeModal } from "@/shared/components/welcome-modal";
@@ -107,11 +107,7 @@ export const CharacterList = () => {
   // Determine what to render
   const renderList = () => {
     if (loading) {
-      return (
-        <div className="flex justify-center py-10">
-          <LoadingSpinner />
-        </div>
-      );
+      return <CharacterListSkeleton />;
     }
 
     if (characters.length === 0) {
