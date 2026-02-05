@@ -8,6 +8,7 @@ import { ErrorBanner } from "@/shared/components/error-banner";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { CommentsSection } from "./comments-section";
 import { ConfirmationModal } from "@/shared/components/confirmation-modal";
+import emptyStateImage from "@/assets/rick-and-morty.svg";
 
 export const CharacterDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +26,7 @@ export const CharacterDetail = () => {
       <div className="h-full flex flex-col items-center justify-center text-gray-500 bg-white p-8">
         <div className="w-32 h-32 mb-4 opacity-50 bg-gray-200 rounded-full flex items-center justify-center">
           <img
-            src="/src/assets/rick-and-morty.svg"
+            src={emptyStateImage}
             alt="Rick and Morty"
             className="w-24 h-24 opacity-50"
           />

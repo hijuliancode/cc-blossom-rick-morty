@@ -5,7 +5,7 @@ export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-[#24282f]">
+    <div className="flex flex-col items-center justify-center h-screen bg-white">
       <img
         src={notFoundImage}
         alt="Page not found"
