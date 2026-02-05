@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
 
+import { cn } from "@/shared/utils/cn";
+
 type FilterModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -17,11 +19,12 @@ const FilterButton = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg border transition-all ${
+    className={cn(
+      "flex-1 px-4 py-2 text-sm font-medium rounded-lg border transition-all",
       isSelected
         ? "bg-purple-100 border-purple-100 text-purple-700"
-        : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
-    }`}
+        : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50",
+    )}
   >
     {label}
   </button>
@@ -105,7 +108,13 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
         aria-hidden="true"
       />
       <div
-        className="absolute top-12 right-0 z-50 w-80 max-h-[80vh] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200"
+        className={cn(
+          "z-50 bg-white shadow-xl overflow-y-auto p-6 animate-in fade-in duration-200",
+          // Mobile: Action Sheet
+          "fixed inset-x-0 bottom-0 w-full max-h-[85vh] rounded-t-2xl slide-in-from-bottom-10",
+          // Desktop: Popover
+          "md:absolute md:top-12 md:right-0 md:bottom-auto md:left-auto md:w-80 md:max-h-[80vh] md:rounded-xl md:border md:border-gray-100 md:slide-in-from-bottom-0 md:zoom-in-95",
+        )}
         role="dialog"
         aria-modal="true"
         aria-labelledby="filter-modal-title"
@@ -113,6 +122,13 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
         <h2 id="filter-modal-title" className="sr-only">
           Filters
         </h2>
+
+        {/* Mobile Handle & Title */}
+        <div className="md:hidden flex flex-col items-center mb-6">
+          <div className="w-12 h-1.5 bg-gray-200 rounded-full mb-4" />
+          <h2 className="text-lg font-bold text-gray-900">Filters</h2>
+        </div>
+
         <div className="space-y-6">
           {/* Character Type */}
           <div>
@@ -246,11 +262,12 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
               )}
               <button
                 onClick={handleApplyFilters}
-                className={`relative w-full py-3 font-medium rounded-lg transition-all ${
+                className={cn(
+                  "relative w-full py-3 font-medium rounded-lg transition-all",
                   hasFilters || hasUrlFilters
                     ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
-                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                }`}
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200",
+                )}
               >
                 Filter
               </button>
