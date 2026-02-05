@@ -1,19 +1,18 @@
 import { useQuery } from "@apollo/client/react";
 import { useSearchParams } from "react-router";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { GET_CHARACTERS } from "@/graphql/queries/get-characters";
-import type {
-  GetCharactersQuery,
-  Character,
-} from "@/types/__generated__/graphql";
+import type { GetCharactersQuery } from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
-import { CharacterListItem } from "./character-list-item";
 import { FilterModal } from "./filter-modal";
 import { CharacterListSkeleton } from "./character-list-skeleton";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { useDebounce } from "@/shared/hooks/use-debounce";
 import { WelcomeModal } from "@/shared/components/welcome-modal";
 import { useWelcomeModal } from "@/shared/hooks/use-welcome-modal";
+import { useCharacterProcessing } from "../hooks/use-character-processing";
+import { cn } from "@/shared/utils/cn";
+import { CharacterListGrouped } from "./character-list-grouped";
 
 export const CharacterList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +26,15 @@ export const CharacterList = () => {
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("name") || "");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  // Sync from URL to local state (e.g. Back button)
+  useEffect(() => {
+    const nameFromUrl = searchParams.get("name") || "";
+    if (nameFromUrl !== searchTerm) {
+      // eslint-disable-next-line
+      setSearchTerm(nameFromUrl);
+    }
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const currentName = searchParams.get("name") || "";
@@ -51,65 +59,74 @@ export const CharacterList = () => {
   const filterType = searchParams.get("filter") || "all";
   const sortOrder = searchParams.get("sort");
 
-  const { loading, error, data } = useQuery<GetCharactersQuery>(
-    GET_CHARACTERS,
-    {
-      variables: {
-        filter: {
-          name,
-          status,
-          species,
-          gender,
-        },
+  const hasActiveFilters =
+    filterType !== "all" ||
+    !!status ||
+    !!species ||
+    !!gender ||
+    !!sortOrder ||
+    !!name;
+
+  const activeFiltersCount = [
+    status,
+    species,
+    gender,
+    filterType !== "all" ? true : null,
+  ].filter(Boolean).length;
+
+  // Filtered Query
+  const {
+    loading: loadingFiltered,
+    error: errorFiltered,
+    data: dataFiltered,
+  } = useQuery<GetCharactersQuery>(GET_CHARACTERS, {
+    variables: {
+      filter: {
+        name,
+        status,
+        species,
+        gender,
       },
     },
+  });
+
+  const {
+    filteredCharacters: rawResults,
+    starredCharacters: starredResults,
+    otherCharacters: otherResults,
+  } = useCharacterProcessing({
+    data: dataFiltered,
+    hiddenCharacters,
+    favorites,
+    sortOrder,
+  });
+
+  let results = rawResults;
+  if (filterType === "starred") results = starredResults;
+  if (filterType === "others") results = otherResults;
+
+  // If specific filterType is applied, we might want to respect it in the grouping
+  // But standard behavior described is: Favorites then Others.
+  // If "starred" filter is active, 'otherResults' will be empty anyway (handled by logic above if we passed filtered data correctly)
+  // Wait, useCharacterProcessing splits rawResults into starred/others based on favorites list.
+  // If filterType is "starred", results = starredResults.
+  // We need to pass the correct lists to CharacterListGrouped.
+
+  // Re-deriving starred/others for display based on 'results' which respects filterType
+  // This is a bit redundant if filterType is 'all', but safe.
+  const displayStarred = results.filter((char) =>
+    favorites.includes(char.id || ""),
+  );
+  const displayOthers = results.filter(
+    (char) => !favorites.includes(char.id || ""),
   );
 
-  // Filter and Sort Logic
-  const filteredCharacters = useMemo(() => {
-    return (
-      data?.characters?.results?.filter(
-        (char): char is Character =>
-          !!char && !hiddenCharacters.includes(char.id || ""),
-      ) || []
-    );
-  }, [data, hiddenCharacters]);
-
-  const { starredCharacters, otherCharacters } = useMemo(() => {
-    const starred: Character[] = [];
-    const others: Character[] = [];
-
-    filteredCharacters.forEach((char) => {
-      if (!char?.id) return;
-      if (favorites.includes(char.id)) {
-        starred.push(char);
-      } else {
-        others.push(char);
-      }
-    });
-
-    const sortFn = (a: Character, b: Character) => {
-      if (sortOrder === "asc")
-        return (a.name || "").localeCompare(b.name || "");
-      if (sortOrder === "desc")
-        return (b.name || "").localeCompare(a.name || "");
-      return 0;
-    };
-
-    if (sortOrder) {
-      starred.sort(sortFn);
-      others.sort(sortFn);
-    }
-
-    return { starredCharacters: starred, otherCharacters: others };
-  }, [filteredCharacters, favorites, sortOrder]);
-
-  if (error) {
+  if (errorFiltered) {
     return (
       <div className="p-4">
         <ErrorBanner
           title="Error loading characters"
-          description={error.message}
+          description={errorFiltered?.message || "Unknown error"}
         />
       </div>
     );
@@ -117,120 +134,61 @@ export const CharacterList = () => {
 
   // Determine what to render
   const renderList = () => {
-    if (loading) {
+    if (loadingFiltered && !dataFiltered) {
       return <CharacterListSkeleton />;
     }
 
-    if (filteredCharacters.length === 0) {
+    if (results.length === 0) {
+      if (loadingFiltered) return <CharacterListSkeleton />;
+      // No matches found
+      if (hasActiveFilters) {
+        return (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center px-4 py-2 mb-2">
+              <h2 className="text-blue-600 font-bold text-lg">0 Results</h2>
+              {activeFiltersCount > 0 && (
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                  {activeFiltersCount} Filter
+                </span>
+              )}
+            </div>
+            <div className="text-center py-8 bg-gray-50 rounded-xl mx-4">
+              <p className="text-gray-500">No matches found for this filter.</p>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="flex flex-col items-center justify-center py-10 text-center px-4">
           <div className="w-24 h-24 mb-4 opacity-30 bg-gray-200 rounded-full flex items-center justify-center">
-            <span className="text-4xl">🔍</span>
+            <span className="text-4xl">�</span>
           </div>
           <h3 className="text-lg font-medium text-gray-900">
             No characters found
           </h3>
-          <p className="text-gray-500 mt-1 text-sm">
-            Try adjusting your search or filters to find what you're looking
-            for.
-          </p>
         </div>
       );
     }
 
-    if (filterType === "starred") {
-      if (starredCharacters.length === 0) {
-        return (
-          <div className="flex flex-col items-center justify-center py-10 text-center px-4">
-            <div className="w-24 h-24 mb-4 opacity-30 bg-purple-100 rounded-full flex items-center justify-center">
-              <span className="text-4xl">💔</span>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900">
-              No favorites yet
-            </h3>
-            <p className="text-gray-500 mt-1 text-sm">
-              Mark characters as favorites to see them here.
-            </p>
-          </div>
-        );
-      }
-      return (
-        <div className="space-y-1">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-4 pt-4">
-            Starred Characters ({starredCharacters.length})
-          </h3>
-          {starredCharacters.map((char) =>
-            char ? (
-              <div key={char.id}>
-                <div className="h-px bg-gray-200 mx-4 my-1" />
-                <div className="px-2">
-                  <CharacterListItem character={char} />
-                </div>
-              </div>
-            ) : null,
-          )}
-        </div>
-      );
-    }
-
-    if (filterType === "others") {
-      return (
-        <div className="space-y-1">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4 pt-4">
-            Characters ({otherCharacters.length})
-          </h3>
-          {otherCharacters.map((char) =>
-            char ? (
-              <div key={char.id}>
-                <div className="h-px bg-gray-200 mx-4 my-1" />
-                <div className="px-2">
-                  <CharacterListItem character={char} />
-                </div>
-              </div>
-            ) : null,
-          )}
-        </div>
-      );
-    }
-
-    // Default: All (Grouped)
     return (
-      <div className="space-y-6">
-        {starredCharacters.length > 0 && (
-          <div className="space-y-1">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-6">
-              Starred Characters ({starredCharacters.length})
-            </h3>
-            {starredCharacters.map((char) =>
-              char ? (
-                <div key={char.id}>
-                  <div className="h-px bg-gray-200 mx-4 my-1" />
-                  <div className="px-2">
-                    <CharacterListItem character={char} />
-                  </div>
-                </div>
-              ) : null,
+      <div className="space-y-2">
+        {hasActiveFilters && (
+          <div className="flex justify-between items-center px-4 py-2 mb-2">
+            <h2 className="text-blue-600 font-bold text-lg">
+              {results.length} Results
+            </h2>
+            {activeFiltersCount > 0 && (
+              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                {activeFiltersCount} Filter
+              </span>
             )}
           </div>
         )}
-
-        {otherCharacters.length > 0 && (
-          <div className="space-y-1">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-6">
-              Characters ({otherCharacters.length})
-            </h3>
-            {otherCharacters.map((char) =>
-              char ? (
-                <div key={char.id}>
-                  <div className="h-px bg-gray-200 mx-4 my-1" />
-                  <div className="px-2">
-                    <CharacterListItem character={char} />
-                  </div>
-                </div>
-              ) : null,
-            )}
-          </div>
-        )}
+        <CharacterListGrouped
+          starredCharacters={displayStarred}
+          otherCharacters={displayOthers}
+        />
       </div>
     );
   };
@@ -295,20 +253,17 @@ export const CharacterList = () => {
             </svg>
           </div>
           <div className="relative">
-            {(filterType !== "all" ||
-              status ||
-              species ||
-              gender ||
-              sortOrder) && (
-              <span className="absolute inset-0 rounded-lg bg-purple-600 opacity-75 animate-ping" />
+            {hasActiveFilters && (
+              <span className="absolute inset-0 rounded-lg bg-purple-200 opacity-75 animate-ping" />
             )}
             <button
               onClick={() => setIsFilterOpen(true)}
-              className={`relative p-3 rounded-lg transition-colors ${
-                filterType !== "all" || status || species || gender || sortOrder
-                  ? "bg-purple-600 text-white shadow-lg"
-                  : "bg-gray-100 text-purple-600 hover:bg-gray-200"
-              }`}
+              className={cn(
+                "relative p-3 rounded-lg transition-colors",
+                hasActiveFilters
+                  ? "bg-purple-200 text-purple-800 shadow-lg"
+                  : "bg-gray-100 text-purple-600 hover:bg-gray-200",
+              )}
               aria-label="Open filters"
               aria-expanded={isFilterOpen}
               aria-haspopup="dialog"
@@ -335,17 +290,18 @@ export const CharacterList = () => {
                 <line x1="17" y1="16" x2="23" y2="16"></line>
               </svg>
             </button>
+            {isFilterOpen && (
+              <FilterModal
+                isOpen={isFilterOpen}
+                onClose={() => setIsFilterOpen(false)}
+              />
+            )}
           </div>
         </div>
       </div>
-
       {/* List Content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">{renderList()}</div>
 
-      <FilterModal
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-      />
       <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal} />
     </div>
   );

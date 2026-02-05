@@ -242,7 +242,7 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
           <div className="pt-4 space-y-3">
             <div className="relative">
               {(hasFilters || hasUrlFilters) && (
-                <span className="absolute inset-0 rounded-lg bg-purple-400 opacity-75 animate-ping" />
+                <span className="absolute inset-0 rounded-lg bg-purple-200 opacity-75 animate-ping" />
               )}
               <button
                 onClick={handleApplyFilters}
