@@ -29,7 +29,21 @@ export const UserInteractionsProvider = ({
   const [data, setData] = useState<StoredData>(() => {
     try {
       const stored = localStorage.getItem(USER_INTERACTIONS_STORAGE_KEY);
-      return stored ? JSON.parse(stored) : INITIAL_DATA;
+      if (!stored) return INITIAL_DATA;
+
+      const parsed = JSON.parse(stored);
+      return {
+        favorites: Array.isArray(parsed.favorites)
+          ? parsed.favorites
+          : INITIAL_DATA.favorites,
+        deletedCharacters: Array.isArray(parsed.deletedCharacters)
+          ? parsed.deletedCharacters
+          : INITIAL_DATA.deletedCharacters,
+        comments:
+          typeof parsed.comments === "object" && parsed.comments !== null
+            ? parsed.comments
+            : INITIAL_DATA.comments,
+      };
     } catch {
       return INITIAL_DATA;
     }
