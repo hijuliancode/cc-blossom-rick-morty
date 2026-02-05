@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Rick and Morty App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for browsing and managing Rick and Morty characters, built with performance and best practices in mind.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Character Browsing**: View a paginated list of characters from the Rick and Morty universe.
+- **Filtering**: Filter characters by status, species, gender, and more.
+- **Character Details**: View detailed information about specific characters.
+- **Favorites & Comments**: Manage your favorite characters and add personal notes.
+- **Responsive Design**: Fully responsive UI built with Tailwind CSS.
 
-## React Compiler
+## 🛠 Tech Stack
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **Core**: React 19, TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS v4
+- **Routing**: React Router v7
+- **Data Fetching**: Apollo Client (GraphQL)
+- **Testing**: Vitest, React Testing Library, jest-axe (Accessibility)
+- **Code Generation**: GraphQL Codegen
 
-## Expanding the ESLint configuration
+## 📦 Installation & Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2.  **Generate GraphQL Types** (Required for TypeScript):
+    ```bash
+    npm run codegen
+    ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3.  **Start Development Server**:
+    ```bash
+    npm run dev
+    ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧪 Running Tests
+
+Run the test suite using Vitest:
+
+```bash
+npm test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏗 Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The project follows a feature-based architecture:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/features/`: Contains domain-specific modules (characters, favorites, etc.)
+- `src/shared/`: Reusable components, hooks, and utilities.
+- `src/graphql/`: GraphQL queries and client configuration.
+- `src/context/`: Global state management.
+
+## 📝 License
+
+MIT

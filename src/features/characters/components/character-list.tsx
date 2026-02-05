@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client/react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { useState, useEffect } from "react";
 import { GET_CHARACTERS } from "../../../graphql/queries/get-characters";
 import type { GetCharactersQuery } from "../../../types/__generated__/graphql";

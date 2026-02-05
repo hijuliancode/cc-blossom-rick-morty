@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { useUserInteractions } from "../../../hooks/use-user-interactions";
 import type { Character } from "../../../types/__generated__/graphql";
 
@@ -43,9 +43,13 @@ export const CharacterListItem = ({ character }: CharacterListItemProps) => {
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
         {isFavorite ? (
-          <span className="text-green-500 text-xl" aria-hidden="true">♥</span>
+          <span className="text-green-500 text-xl" aria-hidden="true">
+            ♥
+          </span>
         ) : (
-          <span className="text-gray-300 text-xl" aria-hidden="true">♡</span>
+          <span className="text-gray-300 text-xl" aria-hidden="true">
+            ♡
+          </span>
         )}
       </button>
     </NavLink>

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { CharacterListItem } from "./character-list-item";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import * as UserInteractionsHook from "../../../hooks/use-user-interactions";
 import { axe, toHaveNoViolations } from "jest-axe";
 

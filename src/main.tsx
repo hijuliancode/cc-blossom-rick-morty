@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { ApolloProvider } from "@apollo/client/react";
 import { client } from "./graphql/client.ts";
 import { UserInteractionsProvider } from "./context/user-interactions-provider.tsx";

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client/react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { GET_CHARACTER } from "../../../graphql/queries/get-character";
 import type { GetCharacterQuery } from "../../../types/__generated__/graphql";

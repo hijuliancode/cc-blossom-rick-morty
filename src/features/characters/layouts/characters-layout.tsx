@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router";
 import { CharacterList } from "../components/character-list";
 
 export const CharactersLayout = () => {
