@@ -40,11 +40,12 @@ export const CharacterListItem = ({ character }: CharacterListItemProps) => {
           if (character.id) toggleFavorite(character.id);
         }}
         className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
         {isFavorite ? (
-          <span className="text-green-500 text-xl">♥</span>
+          <span className="text-green-500 text-xl" aria-hidden="true">♥</span>
         ) : (
-          <span className="text-gray-300 text-xl">♡</span>
+          <span className="text-gray-300 text-xl" aria-hidden="true">♡</span>
         )}
       </button>
     </NavLink>

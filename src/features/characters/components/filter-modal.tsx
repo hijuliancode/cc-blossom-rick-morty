@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type FilterModalProps = {
@@ -29,6 +29,17 @@ const FilterButton = ({
 
 export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
 
   // Initialize local state from URL params
   const [status, setStatus] = useState(searchParams.get("status") || "");
@@ -88,8 +99,20 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      <div className="absolute top-12 right-0 z-50 w-80 max-h-[80vh] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+      <div
+        className="fixed inset-0 bg-black/20 z-40"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-12 right-0 z-50 w-80 max-h-[80vh] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="filter-modal-title"
+      >
+        <h2 id="filter-modal-title" className="sr-only">
+          Filters
+        </h2>
         <div className="space-y-6">
           {/* Character Type */}
           <div>

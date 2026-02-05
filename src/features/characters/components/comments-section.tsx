@@ -49,7 +49,11 @@ export const CommentsSection = ({ characterId }: CommentsSectionProps) => {
       {/* Add Comment Form */}
       <form onSubmit={handleAddComment} className="mb-6">
         <div className="flex gap-2">
+          <label htmlFor="new-comment" className="sr-only">
+            Add a comment
+          </label>
           <input
+            id="new-comment"
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -67,15 +71,26 @@ export const CommentsSection = ({ characterId }: CommentsSectionProps) => {
       </form>
 
       {/* Comments List */}
-      <div className="space-y-4">
+      <div className="space-y-4" role="list">
         {characterComments.length === 0 ? (
           <p className="text-gray-500 italic text-sm">No comments yet.</p>
         ) : (
           characterComments.map((comment) => (
-            <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
+            <div
+              key={comment.id}
+              className="bg-gray-50 rounded-lg p-4"
+              role="listitem"
+            >
               {editingId === comment.id ? (
                 <div className="space-y-2">
+                  <label
+                    htmlFor={`edit-comment-${comment.id}`}
+                    className="sr-only"
+                  >
+                    Edit comment
+                  </label>
                   <input
+                    id={`edit-comment-${comment.id}`}
                     type="text"
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}

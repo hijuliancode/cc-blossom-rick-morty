@@ -206,18 +206,24 @@ export const CharacterList = () => {
         </h1>
         <div className="relative flex gap-2">
           <div className="relative flex-1">
+            <label htmlFor="search-input" className="sr-only">
+              Search characters
+            </label>
             <input
+              id="search-input"
               type="text"
               placeholder="Search or filter results"
               className="w-full bg-gray-100 border-none rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-purple-200 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search characters"
             />
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -242,6 +248,9 @@ export const CharacterList = () => {
                   ? "bg-purple-600 text-white shadow-lg"
                   : "bg-gray-100 text-purple-600 hover:bg-gray-200"
               }`}
+              aria-label="Open filters"
+              aria-expanded={isFilterOpen}
+              aria-haspopup="dialog"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -253,6 +262,7 @@ export const CharacterList = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
               >
                 <line x1="4" y1="21" x2="4" y2="14"></line>
                 <line x1="4" y1="10" x2="4" y2="3"></line>

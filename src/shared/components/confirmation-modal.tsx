@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 type ConfirmationModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -21,25 +23,49 @@ export const ConfirmationModal = ({
 }: ConfirmationModalProps) => {
   if (!isOpen) return null;
 
+  // Close on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
   return (
     <>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 z-50 transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
-      
+
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="confirmation-modal-title"
+        aria-describedby="confirmation-modal-description"
+      >
         <div className="bg-white rounded-lg shadow-xl w-full max-w-sm pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3
+              id="confirmation-modal-title"
+              className="text-lg font-semibold text-gray-900 mb-2"
+            >
               {title}
             </h3>
-            <p className="text-gray-500 mb-6 text-sm leading-relaxed">
+            <p
+              id="confirmation-modal-description"
+              className="text-gray-500 mb-6 text-sm leading-relaxed"
+            >
               {message}
             </p>
-            
+
             <div className="flex gap-3 justify-end">
               <button
                 onClick={onClose}

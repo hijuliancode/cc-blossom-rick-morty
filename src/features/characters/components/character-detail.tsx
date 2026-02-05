@@ -76,8 +76,12 @@ export const CharacterDetail = () => {
       <Link
         to="/characters"
         className="md:hidden mb-6 inline-flex items-center text-gray-600 hover:text-gray-900"
+        aria-label="Back to character list"
       >
-        ← Back to list
+        <span aria-hidden="true" className="mr-2">
+          ←
+        </span>
+        Back to list
       </Link>
 
       <div className="max-w-2xl mx-auto">
