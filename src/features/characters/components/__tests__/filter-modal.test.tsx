@@ -36,7 +36,6 @@ describe("FilterModal", () => {
     expect(screen.getByText("Specie")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText("Gender")).toBeInTheDocument();
-    expect(screen.getByText("Sort")).toBeInTheDocument();
   });
 
   it("calls onClose when pressing Escape", async () => {

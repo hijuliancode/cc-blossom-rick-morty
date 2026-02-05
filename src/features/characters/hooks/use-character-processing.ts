@@ -24,13 +24,16 @@ export const useCharacterProcessing = ({
       ) || [];
 
     if (sortOrder) {
-      chars.sort((a, b) => {
+      // Create a shallow copy to sort immutably
+      const sortedChars = [...chars];
+      sortedChars.sort((a, b) => {
         if (sortOrder === "asc")
           return (a.name || "").localeCompare(b.name || "");
         if (sortOrder === "desc")
           return (b.name || "").localeCompare(a.name || "");
         return 0;
       });
+      return sortedChars;
     }
 
     return chars;
