@@ -217,16 +217,21 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
 
           {/* Filter Action Button */}
           <div className="pt-4 space-y-3">
-            <button
-              onClick={handleApplyFilters}
-              className={`w-full py-3 font-medium rounded-lg transition-colors ${
-                hasFilters || hasUrlFilters
-                  ? "bg-purple-100 text-purple-700 hover:bg-purple-200"
-                  : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-              }`}
-            >
-              Filter
-            </button>
+            <div className="relative">
+              {(hasFilters || hasUrlFilters) && (
+                <span className="absolute inset-0 rounded-lg bg-purple-400 opacity-75 animate-ping" />
+              )}
+              <button
+                onClick={handleApplyFilters}
+                className={`relative w-full py-3 font-medium rounded-lg transition-all ${
+                  hasFilters || hasUrlFilters
+                    ? "bg-purple-600 text-white hover:bg-purple-700 shadow-md"
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                }`}
+              >
+                Filter
+              </button>
+            </div>
             {hasFilters && (
               <button
                 onClick={handleClearFilters}
