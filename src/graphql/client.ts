@@ -1,18 +1,16 @@
 import { HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import { InMemoryCache } from "@apollo/client";
-import { ApolloClient } from "@apollo/client";
+import { InMemoryCache, ApolloClient } from "@apollo/client";
+import { GraphQLError } from "graphql";
+import type { ExecutionResult } from "graphql";
 import { RICK_AND_MORTY_API_URL } from "@/shared/constants/urls";
-
-interface GraphQLError {
-  message: string;
-  locations?: ReadonlyArray<{ line: number; column: number }>;
-  path?: ReadonlyArray<string | number>;
-}
 
 interface ErrorResponse {
   graphQLErrors?: ReadonlyArray<GraphQLError>;
   networkError?: Error | null;
+  response?: ExecutionResult;
+  operation?: unknown;
+  forward?: unknown;
 }
 
 const errorLink = onError(({ graphQLErrors, networkError }: ErrorResponse) => {

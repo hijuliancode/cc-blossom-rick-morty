@@ -3,7 +3,7 @@ import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
 // Mock matchMedia
-vi.stubGlobal("matchMedia", (query: any) => ({
+vi.stubGlobal("matchMedia", (query: string) => ({
   matches: false,
   media: query,
   onchange: null,
