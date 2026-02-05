@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router";
 
 import { cn } from "@/shared/utils/cn";
@@ -32,6 +32,8 @@ const FilterButton = ({
 
 export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef<number | null>(null);
 
   // Close on Escape key
   useEffect(() => {
@@ -43,6 +45,49 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  // Reset transform when opening
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.style.transform = "";
+    }
+  }, [isOpen]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - touchStartY.current;
+
+    if (deltaY > 0 && modalRef.current) {
+      // Allow dragging down
+      modalRef.current.style.transform = `translateY(${deltaY}px)`;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const currentY = e.changedTouches[0].clientY;
+    const deltaY = currentY - touchStartY.current;
+
+    if (deltaY > 100) {
+      // Dragged far enough to close
+      onClose();
+    } else if (modalRef.current) {
+      // Reset position if not dragged far enough
+      modalRef.current.style.transition = "transform 0.3s ease-out";
+      modalRef.current.style.transform = "";
+      setTimeout(() => {
+        if (modalRef.current) {
+          modalRef.current.style.transition = "";
+        }
+      }, 300);
+    }
+    touchStartY.current = null;
+  };
 
   // Initialize local state from URL params
   const [status, setStatus] = useState(searchParams.get("status") || "");
@@ -108,6 +153,7 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
         aria-hidden="true"
       />
       <div
+        ref={modalRef}
         className={cn(
           "z-50 bg-white shadow-xl overflow-y-auto p-6 animate-in fade-in duration-200",
           // Mobile: Action Sheet
@@ -124,7 +170,13 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
         </h2>
 
         {/* Mobile Handle & Title */}
-        <div className="md:hidden flex flex-col items-center mb-6">
+        <div
+          className="md:hidden flex flex-col items-center mb-6 cursor-pointer touch-none"
+          onClick={onClose}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="w-12 h-1.5 bg-gray-200 rounded-full mb-4" />
           <h2 className="text-lg font-bold text-gray-900">Filters</h2>
         </div>
