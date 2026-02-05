@@ -6,6 +6,7 @@ import { client } from "@/graphql/client";
 import { UserInteractionsProvider } from "@/context/user-interactions-provider";
 import { CharactersLayout } from "@/features/characters/layouts/characters-layout";
 import { CharacterDetail } from "@/features/characters/components/character-detail";
+import { NotFoundPage } from "@/shared/components/not-found-page";
 import "@/rick-morty.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
               <Route index element={<CharacterDetail />} />
               <Route path=":id" element={<CharacterDetail />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </UserInteractionsProvider>
       </ApolloProvider>
