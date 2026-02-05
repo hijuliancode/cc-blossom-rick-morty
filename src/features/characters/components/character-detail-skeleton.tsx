@@ -10,8 +10,12 @@ export const CharacterDetailSkeleton = () => {
             {/* Avatar Skeleton */}
             <div className="relative w-32 h-32">
               <Skeleton className="w-full h-full rounded-full" />
+              {/* Heart Icon Skeleton */}
+              <div className="absolute bottom-0 right-0">
+                <Skeleton className="w-10 h-10 rounded-full border-4 border-white" />
+              </div>
             </div>
-            
+
             {/* Action Button Skeleton */}
             <Skeleton className="w-10 h-10 rounded-full" />
           </div>
@@ -32,20 +36,20 @@ export const CharacterDetailSkeleton = () => {
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-5 w-full max-w-md" />
           </div>
-          
+
           <div className="border-t border-gray-100 pt-4 space-y-2">
-             <Skeleton className="h-4 w-24" />
-             <Skeleton className="h-5 w-full max-w-md" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-5 w-full max-w-md" />
           </div>
 
           <div className="border-t border-gray-100 pt-4 space-y-2">
-             <Skeleton className="h-4 w-24" />
-             <Skeleton className="h-5 w-full max-w-md" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-5 w-full max-w-md" />
           </div>
 
-           <div className="border-t border-gray-100 pt-4 space-y-2">
-             <Skeleton className="h-4 w-24" />
-             <Skeleton className="h-5 w-full max-w-md" />
+          <div className="border-t border-gray-100 pt-4 space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-5 w-full max-w-md" />
           </div>
         </div>
       </div>

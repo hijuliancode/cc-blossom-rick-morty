@@ -5,6 +5,8 @@ import { GET_CHARACTER } from "@/graphql/queries/get-character";
 import type { GetCharacterQuery } from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
 import { CharacterDetailSkeleton } from "./character-detail-skeleton";
+import { ButtonFavorite } from "@/shared/components/button-favorite";
+import { ButtonDelete } from "@/shared/components/button-delete";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { CommentsSection } from "./comments-section";
 import { ConfirmationModal } from "@/shared/components/confirmation-modal";
@@ -93,30 +95,17 @@ export const CharacterDetail = () => {
                   className="w-full h-full rounded-full object-cover shadow-md"
                 />
               )}
+              <ButtonFavorite
+                isFavorite={isFavorite}
+                onClick={() => character.id && toggleFavorite(character.id)}
+                className="absolute bottom-0 right-0 p-2.5 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors border border-gray-100"
+              />
             </div>
             <div className="flex gap-2">
-              <button
-                onClick={() => character.id && toggleFavorite(character.id)}
-                aria-label={
-                  isFavorite ? "Remove from favorites" : "Add to favorites"
-                }
-                className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors border border-gray-100"
-              >
-                {isFavorite ? (
-                  <span className="text-green-500 text-2xl">♥</span>
-                ) : (
-                  <span className="text-gray-300 text-2xl">♡</span>
-                )}
-              </button>
-              <button
+              <ButtonDelete
                 onClick={() => setIsDeleteModalOpen(true)}
-                aria-label="Hide character"
                 className="p-2 bg-white rounded-full shadow-md hover:bg-red-50 transition-colors border border-gray-100 group"
-              >
-                <span className="text-gray-400 group-hover:text-red-500 text-2xl">
-                  🗑️
-                </span>
-              </button>
+              />
             </div>
           </div>
 

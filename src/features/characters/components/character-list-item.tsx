@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import { ButtonFavorite } from "@/shared/components/button-favorite";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import type { Character } from "@/types/__generated__/graphql";
 
@@ -32,24 +33,15 @@ export const CharacterListItem = ({ character }: CharacterListItemProps) => {
         <p className="font-semibold text-gray-900 truncate">{character.name}</p>
         <p className="text-sm text-gray-500 truncate">{character.species}</p>
       </div>
-      <button
+      <ButtonFavorite
+        isFavorite={isFavorite}
         onClick={(e) => {
-          e.preventDefault(); // Prevent navigation when clicking favorite
+          e.preventDefault();
           if (character.id) toggleFavorite(character.id);
         }}
         className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-      >
-        {isFavorite ? (
-          <span className="text-green-500 text-xl" aria-hidden="true">
-            ♥
-          </span>
-        ) : (
-          <span className="text-gray-300 text-xl" aria-hidden="true">
-            ♡
-          </span>
-        )}
-      </button>
+        iconClassName="w-5 h-5"
+      />
     </NavLink>
   );
 };
