@@ -1,12 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { RouterProvider } from "react-router";
 import { ApolloProvider } from "@apollo/client/react";
 import { client } from "@/graphql/client";
 import { UserInteractionsProvider } from "@/context/user-interactions-provider";
-import { CharactersLayout } from "@/features/characters/layouts/characters-layout";
-import { CharacterDetail } from "@/features/characters/components/character-detail";
-import { NotFoundPage } from "@/shared/components/not-found-page";
+import { router } from "@/router";
 
 // Nunito weights
 import "@fontsource/nunito/400.css";
@@ -18,19 +16,10 @@ import "@/rick-morty.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ApolloProvider client={client}>
-        <UserInteractionsProvider>
-          <Routes>
-            <Route path="/" element={<Navigate to="/characters" replace />} />
-            <Route path="/characters" element={<CharactersLayout />}>
-              <Route index element={<CharacterDetail />} />
-              <Route path=":id" element={<CharacterDetail />} />
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </UserInteractionsProvider>
-      </ApolloProvider>
-    </BrowserRouter>
+    <ApolloProvider client={client}>
+      <UserInteractionsProvider>
+        <RouterProvider router={router} />
+      </UserInteractionsProvider>
+    </ApolloProvider>
   </StrictMode>,
 );

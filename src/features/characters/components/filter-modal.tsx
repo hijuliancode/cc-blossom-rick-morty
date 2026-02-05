@@ -226,8 +226,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
             </div>
           </div>
 
-          {/* Other Filters (Collapsible or just standard sections) */}
-          {/* I will keep them but style them similarly to maintain consistency */}
           <div>
             <h3 className="text-gray-500 font-medium mb-3">Status</h3>
             <div className="flex flex-wrap gap-2">
