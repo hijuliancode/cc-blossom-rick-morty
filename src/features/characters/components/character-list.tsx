@@ -48,7 +48,6 @@ export const CharacterList = () => {
     filterType !== "all" ? true : null,
   ].filter(Boolean).length;
 
-  // Filtered Query
   const {
     loading: loadingFiltered,
     error: errorFiltered,
@@ -97,7 +96,6 @@ export const CharacterList = () => {
     );
   }
 
-  // Determine what to render
   const renderList = () => {
     if (loadingFiltered && !dataFiltered) {
       return <CharacterListSkeleton />;
@@ -160,7 +158,6 @@ export const CharacterList = () => {
 
   return (
     <div className="flex flex-col h-full ">
-      {/* Search Header */}
       <div className="p-4  sticky top-0 z-10">
         <div className="flex items-center gap-2 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">
@@ -264,7 +261,6 @@ export const CharacterList = () => {
           </div>
         </div>
       </div>
-      {/* List Content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">{renderList()}</div>
 
       <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal} />

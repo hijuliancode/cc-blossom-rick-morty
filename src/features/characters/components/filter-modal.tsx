@@ -35,7 +35,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number | null>(null);
 
-  // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -46,7 +45,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  // Reset transform when opening
   useEffect(() => {
     if (isOpen && modalRef.current) {
       modalRef.current.style.transform = "";
@@ -63,7 +61,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     const deltaY = currentY - touchStartY.current;
 
     if (deltaY > 0 && modalRef.current) {
-      // Allow dragging down
       modalRef.current.style.transform = `translateY(${deltaY}px)`;
     }
   };
@@ -74,10 +71,8 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     const deltaY = currentY - touchStartY.current;
 
     if (deltaY > 100) {
-      // Dragged far enough to close
       onClose();
     } else if (modalRef.current) {
-      // Reset position if not dragged far enough
       modalRef.current.style.transition = "transform 0.3s ease-out";
       modalRef.current.style.transform = "";
       setTimeout(() => {
@@ -169,7 +164,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
           Filters
         </h2>
 
-        {/* Mobile Handle & Title */}
         <div
           className="md:hidden flex flex-col items-center mb-6 cursor-pointer touch-none"
           onClick={onClose}
@@ -182,7 +176,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
         </div>
 
         <div className="space-y-6">
-          {/* Character Type */}
           <div>
             <h3 className="text-gray-500 font-medium mb-3">Character</h3>
             <div className="flex gap-3">
@@ -204,7 +197,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
             </div>
           </div>
 
-          {/* Species */}
           <div>
             <h3 className="text-gray-500 font-medium mb-3">Specie</h3>
             <div className="flex gap-3">
@@ -304,7 +296,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
             </div>
           </div>
 
-          {/* Filter Action Button */}
           <div className="pt-4 space-y-3">
             <div className="relative">
               {(hasFilters || hasUrlFilters) && (
