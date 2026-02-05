@@ -109,13 +109,37 @@ export const CharacterList = () => {
 
     if (characters.length === 0) {
       return (
-        <div className="text-center py-10 text-gray-500">
-          No characters found.
+        <div className="flex flex-col items-center justify-center py-10 text-center px-4">
+          <div className="w-24 h-24 mb-4 opacity-30 bg-gray-200 rounded-full flex items-center justify-center">
+            <span className="text-4xl">🔍</span>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900">
+            No characters found
+          </h3>
+          <p className="text-gray-500 mt-1 text-sm">
+            Try adjusting your search or filters to find what you're looking
+            for.
+          </p>
         </div>
       );
     }
 
     if (filterType === "starred") {
+      if (starredCharacters.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center py-10 text-center px-4">
+            <div className="w-24 h-24 mb-4 opacity-30 bg-purple-100 rounded-full flex items-center justify-center">
+              <span className="text-4xl">💔</span>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              No favorites yet
+            </h3>
+            <p className="text-gray-500 mt-1 text-sm">
+              Mark characters as favorites to see them here.
+            </p>
+          </div>
+        );
+      }
       return (
         <div className="space-y-2">
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
@@ -185,7 +209,7 @@ export const CharacterList = () => {
             <input
               type="text"
               placeholder="Search or filter results"
-              className="w-full bg-gray-100 border-none rounded-lg py-3 pl-10 pr-4 text-gray-600 placeholder-gray-400 focus:ring-2 focus:ring-purple-200 transition-all"
+              className="w-full bg-gray-100 border-none rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-purple-200 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

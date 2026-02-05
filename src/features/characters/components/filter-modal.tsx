@@ -6,6 +6,27 @@ type FilterModalProps = {
   onClose: () => void;
 };
 
+const FilterButton = ({
+  label,
+  isSelected,
+  onClick,
+}: {
+  label: string;
+  isSelected: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg border transition-all ${
+      isSelected
+        ? "bg-purple-100 border-purple-100 text-purple-700"
+        : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+    }`}
+  >
+    {label}
+  </button>
+);
+
 export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -41,150 +62,152 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     onClose();
   };
 
+  /*
   const handleClearFilters = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete("status");
-    newParams.delete("species");
-    newParams.delete("gender");
-    newParams.delete("filter");
-    newParams.delete("sort");
-    setSearchParams(newParams);
-    onClose();
+    setStatus("");
+    setSpecies("");
+    setGender("");
+    setFilterType("all");
+    setSortOrder("");
   };
+  */
 
   if (!isOpen) return null;
 
   return (
     <>
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      <div className="absolute top-12 right-0 z-50 w-72 bg-white rounded-lg shadow-xl border border-gray-200 p-4 animate-in fade-in zoom-in-95 duration-200">
-        <div className="space-y-4">
+      <div className="absolute top-12 right-0 z-50 w-80 bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+        <div className="space-y-6">
+          {/* Character Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Character Type
-            </label>
-            <div className="flex bg-gray-100 p-1 rounded-md">
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  filterType === "all" ? "bg-white shadow-sm" : "text-gray-500"
-                }`}
+            <h3 className="text-gray-500 font-medium mb-3">Character</h3>
+            <div className="flex gap-3">
+              <FilterButton
+                label="All"
+                isSelected={filterType === "all"}
                 onClick={() => setFilterType("all")}
-              >
-                All
-              </button>
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  filterType === "starred"
-                    ? "bg-white shadow-sm"
-                    : "text-gray-500"
-                }`}
+              />
+              <FilterButton
+                label="Starred"
+                isSelected={filterType === "starred"}
                 onClick={() => setFilterType("starred")}
-              >
-                Starred
-              </button>
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  filterType === "others"
-                    ? "bg-white shadow-sm"
-                    : "text-gray-500"
-                }`}
+              />
+              <FilterButton
+                label="Others"
+                isSelected={filterType === "others"}
                 onClick={() => setFilterType("others")}
-              >
-                Others
-              </button>
+              />
             </div>
           </div>
 
+          {/* Species */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Species
-            </label>
-            <div className="flex bg-gray-100 p-1 rounded-md">
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  species === "" ? "bg-white shadow-sm" : "text-gray-500"
-                }`}
+            <h3 className="text-gray-500 font-medium mb-3">Specie</h3>
+            <div className="flex gap-3">
+              <FilterButton
+                label="All"
+                isSelected={species === ""}
                 onClick={() => setSpecies("")}
-              >
-                All
-              </button>
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  species === "human" ? "bg-white shadow-sm" : "text-gray-500"
-                }`}
+              />
+              <FilterButton
+                label="Human"
+                isSelected={species === "human"}
                 onClick={() => setSpecies("human")}
-              >
-                Human
-              </button>
-              <button
-                className={`flex-1 py-1 text-sm rounded-md transition-colors ${
-                  species === "alien" ? "bg-white shadow-sm" : "text-gray-500"
-                }`}
+              />
+              <FilterButton
+                label="Alien"
+                isSelected={species === "alien"}
                 onClick={() => setSpecies("alien")}
-              >
-                Alien
-              </button>
+              />
+            </div>
+          </div>
+
+          {/* Other Filters (Collapsible or just standard sections) */}
+          {/* I will keep them but style them similarly to maintain consistency */}
+          <div>
+            <h3 className="text-gray-500 font-medium mb-3">Status</h3>
+            <div className="flex flex-wrap gap-2">
+              <FilterButton
+                label="All"
+                isSelected={status === ""}
+                onClick={() => setStatus("")}
+              />
+              <FilterButton
+                label="Alive"
+                isSelected={status === "alive"}
+                onClick={() => setStatus("alive")}
+              />
+              <FilterButton
+                label="Dead"
+                isSelected={status === "dead"}
+                onClick={() => setStatus("dead")}
+              />
+              <FilterButton
+                label="Unknown"
+                isSelected={status === "unknown"}
+                onClick={() => setStatus("unknown")}
+              />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              className="w-full border p-2 rounded bg-white"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="">All Statuses</option>
-              <option value="alive">Alive</option>
-              <option value="dead">Dead</option>
-              <option value="unknown">Unknown</option>
-            </select>
+            <h3 className="text-gray-500 font-medium mb-3">Gender</h3>
+            <div className="flex flex-wrap gap-2">
+              <FilterButton
+                label="All"
+                isSelected={gender === ""}
+                onClick={() => setGender("")}
+              />
+              <FilterButton
+                label="Female"
+                isSelected={gender === "female"}
+                onClick={() => setGender("female")}
+              />
+              <FilterButton
+                label="Male"
+                isSelected={gender === "male"}
+                onClick={() => setGender("male")}
+              />
+              <FilterButton
+                label="Genderless"
+                isSelected={gender === "genderless"}
+                onClick={() => setGender("genderless")}
+              />
+              <FilterButton
+                label="Unknown"
+                isSelected={gender === "unknown"}
+                onClick={() => setGender("unknown")}
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Gender
-            </label>
-            <select
-              className="w-full border p-2 rounded bg-white"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <option value="">All Genders</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="genderless">Genderless</option>
-              <option value="unknown">Unknown</option>
-            </select>
+            <h3 className="text-gray-500 font-medium mb-3">Sort</h3>
+            <div className="flex flex-wrap gap-2">
+              <FilterButton
+                label="Default"
+                isSelected={sortOrder === ""}
+                onClick={() => setSortOrder("")}
+              />
+              <FilterButton
+                label="A-Z"
+                isSelected={sortOrder === "asc"}
+                onClick={() => setSortOrder("asc")}
+              />
+              <FilterButton
+                label="Z-A"
+                isSelected={sortOrder === "desc"}
+                onClick={() => setSortOrder("desc")}
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort
-            </label>
-            <select
-              className="w-full border p-2 rounded bg-white"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="">Default</option>
-              <option value="asc">Name (A-Z)</option>
-              <option value="desc">Name (Z-A)</option>
-            </select>
-          </div>
-
-          <div className="flex gap-2 pt-2 border-t">
-            <button
-              onClick={handleClearFilters}
-              className="flex-1 px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-            >
-              Clear
-            </button>
+          {/* Filter Action Button */}
+          <div className="pt-4">
             <button
               onClick={handleApplyFilters}
-              className="flex-1 px-3 py-2 text-sm bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+              className="w-full py-3 bg-gray-100 text-gray-900 font-medium rounded-lg hover:bg-gray-200 transition-colors"
             >
               Filter
             </button>
