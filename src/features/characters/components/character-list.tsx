@@ -1,21 +1,21 @@
 import { useQuery } from "@apollo/client/react";
 import { useSearchParams } from "react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { GET_CHARACTERS } from "@/graphql/queries/get-characters";
 import type { GetCharactersQuery } from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
 import { FilterModal } from "./filter-modal";
 import { CharacterListSkeleton } from "./character-list-skeleton";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
-import { useDebounce } from "@/shared/hooks/use-debounce";
 import { WelcomeModal } from "@/shared/components/welcome-modal";
 import { useWelcomeModal } from "@/shared/hooks/use-welcome-modal";
+import { useCharacterSearch } from "../hooks/use-character-search";
 import { useCharacterProcessing } from "../hooks/use-character-processing";
 import { cn } from "@/shared/utils/cn";
 import { CharacterListGrouped } from "./character-list-grouped";
 
 export const CharacterList = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const { deletedCharacters, favorites } = useUserInteractions();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const {
@@ -24,33 +24,7 @@ export const CharacterList = () => {
     openModal: openWelcomeModal,
   } = useWelcomeModal();
 
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("name") || "");
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
-  // Sync from URL to local state (e.g. Back button)
-  useEffect(() => {
-    const nameFromUrl = searchParams.get("name") || "";
-    if (nameFromUrl !== searchTerm) {
-      // eslint-disable-next-line
-      setSearchTerm(nameFromUrl);
-    }
-  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const currentName = searchParams.get("name") || "";
-    if (debouncedSearchTerm !== currentName) {
-      setSearchParams((prev) => {
-        const newParams = new URLSearchParams(prev);
-        if (debouncedSearchTerm) {
-          newParams.set("name", debouncedSearchTerm);
-        } else {
-          newParams.delete("name");
-        }
-        newParams.delete("page");
-        return newParams;
-      });
-    }
-  }, [debouncedSearchTerm, searchParams, setSearchParams]);
+  const { searchTerm, setSearchTerm } = useCharacterSearch();
 
   const name = searchParams.get("name") || undefined;
   const status = searchParams.get("status") || undefined;
@@ -74,7 +48,6 @@ export const CharacterList = () => {
     filterType !== "all" ? true : null,
   ].filter(Boolean).length;
 
-  // Filtered Query
   const {
     loading: loadingFiltered,
     error: errorFiltered,
@@ -105,15 +78,6 @@ export const CharacterList = () => {
   if (filterType === "starred") results = starredResults;
   if (filterType === "others") results = otherResults;
 
-  // If specific filterType is applied, we might want to respect it in the grouping
-  // But standard behavior described is: Favorites then Others.
-  // If "starred" filter is active, 'otherResults' will be empty anyway (handled by logic above if we passed filtered data correctly)
-  // Wait, useCharacterProcessing splits rawResults into starred/others based on favorites list.
-  // If filterType is "starred", results = starredResults.
-  // We need to pass the correct lists to CharacterListGrouped.
-
-  // Re-deriving starred/others for display based on 'results' which respects filterType
-  // This is a bit redundant if filterType is 'all', but safe.
   const displayStarred = results.filter((char) =>
     favorites.includes(char.id || ""),
   );
@@ -132,7 +96,6 @@ export const CharacterList = () => {
     );
   }
 
-  // Determine what to render
   const renderList = () => {
     if (loadingFiltered && !dataFiltered) {
       return <CharacterListSkeleton />;
@@ -195,7 +158,6 @@ export const CharacterList = () => {
 
   return (
     <div className="flex flex-col h-full ">
-      {/* Search Header */}
       <div className="p-4  sticky top-0 z-10">
         <div className="flex items-center gap-2 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">
@@ -299,7 +261,6 @@ export const CharacterList = () => {
           </div>
         </div>
       </div>
-      {/* List Content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">{renderList()}</div>
 
       <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal} />

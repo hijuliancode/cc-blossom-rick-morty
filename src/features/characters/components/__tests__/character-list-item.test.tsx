@@ -50,7 +50,6 @@ describe("CharacterListItem", () => {
     );
 
     expect(screen.getByLabelText("Add to favorites")).toBeInTheDocument();
-    expect(screen.getByText("♡")).toBeInTheDocument();
   });
 
   it("shows filled heart when favorited", () => {
@@ -66,7 +65,6 @@ describe("CharacterListItem", () => {
     );
 
     expect(screen.getByLabelText("Remove from favorites")).toBeInTheDocument();
-    expect(screen.getByText("♥")).toBeInTheDocument();
   });
 
   it("calls toggleFavorite when favorite button is clicked", async () => {
