@@ -1,8 +1,11 @@
 import { useQuery } from "@apollo/client/react";
 import { useSearchParams } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GET_CHARACTERS } from "@/graphql/queries/get-characters";
-import type { GetCharactersQuery } from "@/types/__generated__/graphql";
+import type {
+  GetCharactersQuery,
+  Character,
+} from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
 import { CharacterListItem } from "./character-list-item";
 import { FilterModal } from "./filter-modal";
@@ -62,6 +65,45 @@ export const CharacterList = () => {
     },
   );
 
+  // Filter and Sort Logic
+  const filteredCharacters = useMemo(() => {
+    return (
+      data?.characters?.results?.filter(
+        (char): char is Character =>
+          !!char && !hiddenCharacters.includes(char.id || ""),
+      ) || []
+    );
+  }, [data, hiddenCharacters]);
+
+  const { starredCharacters, otherCharacters } = useMemo(() => {
+    const starred: Character[] = [];
+    const others: Character[] = [];
+
+    filteredCharacters.forEach((char) => {
+      if (!char?.id) return;
+      if (favorites.includes(char.id)) {
+        starred.push(char);
+      } else {
+        others.push(char);
+      }
+    });
+
+    const sortFn = (a: Character, b: Character) => {
+      if (sortOrder === "asc")
+        return (a.name || "").localeCompare(b.name || "");
+      if (sortOrder === "desc")
+        return (b.name || "").localeCompare(a.name || "");
+      return 0;
+    };
+
+    if (sortOrder) {
+      starred.sort(sortFn);
+      others.sort(sortFn);
+    }
+
+    return { starredCharacters: starred, otherCharacters: others };
+  }, [filteredCharacters, favorites, sortOrder]);
+
   if (error) {
     return (
       <div className="p-4">
@@ -73,44 +115,13 @@ export const CharacterList = () => {
     );
   }
 
-  // Filter and Sort Logic
-  const characters =
-    data?.characters?.results?.filter(
-      (char) => char && !hiddenCharacters.includes(char.id || ""),
-    ) || [];
-
-  const starredCharacters = characters.filter(
-    (char) => char?.id && favorites.includes(char.id),
-  );
-
-  const otherCharacters = characters.filter(
-    (char) => char?.id && !favorites.includes(char.id),
-  );
-
-  // Sorting
-  const sortFn = (
-    a: { name?: string | null } | null,
-    b: { name?: string | null } | null,
-  ) => {
-    if (sortOrder === "asc")
-      return (a?.name || "").localeCompare(b?.name || "");
-    if (sortOrder === "desc")
-      return (b?.name || "").localeCompare(a?.name || "");
-    return 0;
-  };
-
-  if (sortOrder) {
-    starredCharacters.sort(sortFn);
-    otherCharacters.sort(sortFn);
-  }
-
   // Determine what to render
   const renderList = () => {
     if (loading) {
       return <CharacterListSkeleton />;
     }
 
-    if (characters.length === 0) {
+    if (filteredCharacters.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-10 text-center px-4">
           <div className="w-24 h-24 mb-4 opacity-30 bg-gray-200 rounded-full flex items-center justify-center">
@@ -219,6 +230,7 @@ export const CharacterList = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -279,8 +291,7 @@ export const CharacterList = () => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                className="w-6 h-6"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

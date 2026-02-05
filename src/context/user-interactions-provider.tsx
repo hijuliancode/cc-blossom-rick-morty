@@ -1,4 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from "react";
 import { UserInteractionsContext } from "./user-interactions-context";
 import type { Comment } from "@/types/user-interactions";
 import { USER_INTERACTIONS_STORAGE_KEY } from "@/shared/constants/local-storage";
@@ -33,23 +39,23 @@ export const UserInteractionsProvider = ({
     localStorage.setItem(USER_INTERACTIONS_STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 
-  const toggleFavorite = (characterId: string) => {
+  const toggleFavorite = useCallback((characterId: string) => {
     setData((prev) => ({
       ...prev,
       favorites: prev.favorites.includes(characterId)
         ? prev.favorites.filter((id) => id !== characterId)
         : [...prev.favorites, characterId],
     }));
-  };
+  }, []);
 
-  const hideCharacter = (characterId: string) => {
+  const hideCharacter = useCallback((characterId: string) => {
     setData((prev) => ({
       ...prev,
       hiddenCharacters: [...prev.hiddenCharacters, characterId],
     }));
-  };
+  }, []);
 
-  const addComment = (characterId: string, text: string) => {
+  const addComment = useCallback((characterId: string, text: string) => {
     const newComment: Comment = {
       id: crypto.randomUUID(),
       text,
@@ -63,47 +69,59 @@ export const UserInteractionsProvider = ({
         [characterId]: [...(prev.comments[characterId] || []), newComment],
       },
     }));
-  };
+  }, []);
 
-  const deleteComment = (characterId: string, commentId: string) => {
-    setData((prev) => ({
-      ...prev,
-      comments: {
-        ...prev.comments,
-        [characterId]:
-          prev.comments[characterId]?.filter((c) => c.id !== commentId) || [],
-      },
-    }));
-  };
+  const deleteComment = useCallback(
+    (characterId: string, commentId: string) => {
+      setData((prev) => ({
+        ...prev,
+        comments: {
+          ...prev.comments,
+          [characterId]:
+            prev.comments[characterId]?.filter((c) => c.id !== commentId) || [],
+        },
+      }));
+    },
+    [],
+  );
 
-  const editComment = (
-    characterId: string,
-    commentId: string,
-    text: string,
-  ) => {
-    setData((prev) => ({
-      ...prev,
-      comments: {
-        ...prev.comments,
-        [characterId]:
-          prev.comments[characterId]?.map((c) =>
-            c.id === commentId ? { ...c, text } : c,
-          ) || [],
-      },
-    }));
-  };
+  const editComment = useCallback(
+    (characterId: string, commentId: string, text: string) => {
+      setData((prev) => ({
+        ...prev,
+        comments: {
+          ...prev.comments,
+          [characterId]:
+            prev.comments[characterId]?.map((c) =>
+              c.id === commentId ? { ...c, text } : c,
+            ) || [],
+        },
+      }));
+    },
+    [],
+  );
+
+  const value = useMemo(
+    () => ({
+      ...data,
+      toggleFavorite,
+      hideCharacter,
+      addComment,
+      deleteComment,
+      editComment,
+    }),
+    [
+      data,
+      toggleFavorite,
+      hideCharacter,
+      addComment,
+      deleteComment,
+      editComment,
+    ],
+  );
 
   return (
-    <UserInteractionsContext.Provider
-      value={{
-        ...data,
-        toggleFavorite,
-        hideCharacter,
-        addComment,
-        deleteComment,
-        editComment,
-      }}
-    >
+    <UserInteractionsContext.Provider value={value}>
       {children}
     </UserInteractionsContext.Provider>
   );

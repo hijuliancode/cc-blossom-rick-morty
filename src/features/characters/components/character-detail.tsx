@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client/react";
 import { useParams, Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { GET_CHARACTER } from "@/graphql/queries/get-character";
 import type { GetCharacterQuery } from "@/types/__generated__/graphql";
 import { ErrorBanner } from "@/shared/components/error-banner";
@@ -20,6 +20,15 @@ export const CharacterDetail = () => {
     variables: { id: id! },
     skip: !id,
   });
+
+  const character = data?.character;
+
+  const handleHideCharacter = useCallback(() => {
+    if (character?.id) {
+      hideCharacter(character.id);
+      navigate("/characters");
+    }
+  }, [character, hideCharacter, navigate]);
 
   if (!id) {
     return (
@@ -54,18 +63,9 @@ export const CharacterDetail = () => {
     );
   }
 
-  const character = data?.character;
-
   if (!character) return null;
 
   const isFavorite = character.id ? favorites.includes(character.id) : false;
-
-  const handleHideCharacter = () => {
-    if (character.id) {
-      hideCharacter(character.id);
-      navigate("/characters");
-    }
-  };
 
   return (
     <div className="h-full bg-white p-8 overflow-y-auto">

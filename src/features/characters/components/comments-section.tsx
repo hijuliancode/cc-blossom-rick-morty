@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { ConfirmationModal } from "@/shared/components/confirmation-modal";
 
@@ -16,31 +16,37 @@ export const CommentsSection = ({ characterId }: CommentsSectionProps) => {
 
   const characterComments = comments[characterId] || [];
 
-  const handleAddComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-    addComment(characterId, newComment.trim());
-    setNewComment("");
-  };
+  const handleAddComment = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!newComment.trim()) return;
+      addComment(characterId, newComment.trim());
+      setNewComment("");
+    },
+    [characterId, newComment, addComment],
+  );
 
-  const startEditing = (id: string, text: string) => {
+  const startEditing = useCallback((id: string, text: string) => {
     setEditingId(id);
     setEditText(text);
-  };
+  }, []);
 
-  const handleUpdateComment = (id: string) => {
-    if (!editText.trim()) return;
-    editComment(characterId, id, editText.trim());
-    setEditingId(null);
-    setEditText("");
-  };
+  const handleUpdateComment = useCallback(
+    (id: string) => {
+      if (!editText.trim()) return;
+      editComment(characterId, id, editText.trim());
+      setEditingId(null);
+      setEditText("");
+    },
+    [characterId, editText, editComment],
+  );
 
-  const confirmDeleteComment = () => {
+  const confirmDeleteComment = useCallback(() => {
     if (deleteCommentId) {
       deleteComment(characterId, deleteCommentId);
       setDeleteCommentId(null);
     }
-  };
+  }, [characterId, deleteCommentId, deleteComment]);
 
   return (
     <div className="mt-8 border-t border-gray-200 pt-6">
