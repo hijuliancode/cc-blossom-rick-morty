@@ -277,10 +277,12 @@ export const CharacterList = () => {
             </button>
           </div>
 
-          <FilterModal
-            isOpen={isFilterOpen}
-            onClose={() => setIsFilterOpen(false)}
-          />
+          {isFilterOpen && (
+            <FilterModal
+              isOpen={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+            />
+          )}
         </div>
       </div>
 

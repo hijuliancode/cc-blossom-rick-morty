@@ -21,8 +21,6 @@ export const ConfirmationModal = ({
   cancelText = "Cancel",
   variant = "primary",
 }: ConfirmationModalProps) => {
-  if (!isOpen) return null;
-
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -33,6 +31,8 @@ export const ConfirmationModal = ({
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <>
