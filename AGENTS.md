@@ -51,6 +51,7 @@ The project uses a **Feature-Based Architecture**.
 - **TypeScript**:
     - No `any`. Use strict typing.
     - Use generated types from `src/types/__generated__/graphql.ts`.
+    - Use absolute imports with `@/` alias for `src/` directory (e.g., `import { foo } from "@/shared/..."`).
 - **Styling**:
     - Use Tailwind utility classes.
     - Responsive design is mandatory.

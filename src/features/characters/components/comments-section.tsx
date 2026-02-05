@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUserInteractions } from "../../../hooks/use-user-interactions";
-import { ConfirmationModal } from "../../../shared/components/confirmation-modal";
+import { useUserInteractions } from "@/hooks/use-user-interactions";
+import { ConfirmationModal } from "@/shared/components/confirmation-modal";
 
 type CommentsSectionProps = {
   characterId: string;

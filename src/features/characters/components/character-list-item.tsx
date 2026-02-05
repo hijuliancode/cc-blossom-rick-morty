@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
-import { useUserInteractions } from "../../../hooks/use-user-interactions";
-import type { Character } from "../../../types/__generated__/graphql";
+import { useUserInteractions } from "@/hooks/use-user-interactions";
+import type { Character } from "@/types/__generated__/graphql";
 
 type CharacterListItemProps = {
   character: Pick<Character, "id" | "name" | "species" | "image">;

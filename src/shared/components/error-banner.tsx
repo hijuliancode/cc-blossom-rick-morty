@@ -1,4 +1,4 @@
-import logo from "../../assets/rick-and-morty.svg";
+import logo from "@/assets/rick-and-morty.svg";
 
 interface ErrorBannerProps {
   title: string;

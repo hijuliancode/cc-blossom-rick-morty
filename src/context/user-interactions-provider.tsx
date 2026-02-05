@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { UserInteractionsContext } from "./user-interactions-context";
-import type { Comment } from "../types/user-interactions";
-import { USER_INTERACTIONS_STORAGE_KEY } from "../shared/constants/local-storage";
+import type { Comment } from "@/types/user-interactions";
+import { USER_INTERACTIONS_STORAGE_KEY } from "@/shared/constants/local-storage";
 
 type StoredData = {
   favorites: string[];
@@ -76,14 +76,18 @@ export const UserInteractionsProvider = ({
     }));
   };
 
-  const editComment = (characterId: string, commentId: string, text: string) => {
+  const editComment = (
+    characterId: string,
+    commentId: string,
+    text: string,
+  ) => {
     setData((prev) => ({
       ...prev,
       comments: {
         ...prev.comments,
         [characterId]:
           prev.comments[characterId]?.map((c) =>
-            c.id === commentId ? { ...c, text } : c
+            c.id === commentId ? { ...c, text } : c,
           ) || [],
       },
     }));

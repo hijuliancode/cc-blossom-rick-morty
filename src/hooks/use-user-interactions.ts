@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserInteractionsContext } from "../context/user-interactions-context";
+import { UserInteractionsContext } from "@/context/user-interactions-context";
 
 export const useUserInteractions = () => {
   const context = useContext(UserInteractionsContext);

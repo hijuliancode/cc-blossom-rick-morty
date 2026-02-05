@@ -1,5 +1,5 @@
 import { Outlet, useParams } from "react-router";
-import { CharacterList } from "../components/character-list";
+import { CharacterList } from "@/features/characters/components/character-list";
 
 export const CharactersLayout = () => {
   const { id } = useParams<{ id: string }>();

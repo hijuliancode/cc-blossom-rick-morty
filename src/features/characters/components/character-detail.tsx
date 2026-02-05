@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client/react";
 import { useParams, Link, useNavigate } from "react-router";
 import { useState } from "react";
-import { GET_CHARACTER } from "../../../graphql/queries/get-character";
-import type { GetCharacterQuery } from "../../../types/__generated__/graphql";
-import { LoadingSpinner } from "../../../shared/components/loading-spinner";
-import { ErrorBanner } from "../../../shared/components/error-banner";
-import { useUserInteractions } from "../../../hooks/use-user-interactions";
+import { GET_CHARACTER } from "@/graphql/queries/get-character";
+import type { GetCharacterQuery } from "@/types/__generated__/graphql";
+import { LoadingSpinner } from "@/shared/components/loading-spinner";
+import { ErrorBanner } from "@/shared/components/error-banner";
+import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { CommentsSection } from "./comments-section";
-import { ConfirmationModal } from "../../../shared/components/confirmation-modal";
+import { ConfirmationModal } from "@/shared/components/confirmation-modal";
 
 export const CharacterDetail = () => {
   const { id } = useParams<{ id: string }>();
