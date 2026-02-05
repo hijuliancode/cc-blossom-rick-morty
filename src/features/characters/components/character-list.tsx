@@ -9,11 +9,18 @@ import { CharacterListItem } from "./character-list-item";
 import { FilterModal } from "./filter-modal";
 import { useUserInteractions } from "@/hooks/use-user-interactions";
 import { useDebounce } from "@/shared/hooks/use-debounce";
+import { WelcomeModal } from "@/shared/components/welcome-modal";
+import { useWelcomeModal } from "@/shared/hooks/use-welcome-modal";
 
 export const CharacterList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { hiddenCharacters, favorites } = useUserInteractions();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const {
+    isOpen: isWelcomeModalOpen,
+    closeModal: closeWelcomeModal,
+    openModal: openWelcomeModal,
+  } = useWelcomeModal();
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("name") || "");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -201,9 +208,31 @@ export const CharacterList = () => {
     <div className="flex flex-col h-full bg-gray-50/50">
       {/* Search Header */}
       <div className="p-4 bg-gray-50/50 sticky top-0 z-10">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
-          Rick and Morty list
-        </h1>
+        <div className="flex items-center gap-2 mb-4">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Rick and Morty list
+          </h1>
+          <button
+            onClick={openWelcomeModal}
+            className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-colors"
+            title="About this project"
+            aria-label="About this project"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </button>
+        </div>
         <div className="relative flex gap-2">
           <div className="relative flex-1">
             <label htmlFor="search-input" className="sr-only">
@@ -276,18 +305,17 @@ export const CharacterList = () => {
               </svg>
             </button>
           </div>
-
-          {isFilterOpen && (
-            <FilterModal
-              isOpen={isFilterOpen}
-              onClose={() => setIsFilterOpen(false)}
-            />
-          )}
         </div>
       </div>
 
       {/* List Content */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">{renderList()}</div>
+
+      <FilterModal
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+      />
+      <WelcomeModal isOpen={isWelcomeModalOpen} onClose={closeWelcomeModal} />
     </div>
   );
 };
