@@ -156,7 +156,7 @@ export const CharacterList = () => {
       }
       return (
         <div className="space-y-2">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
             Starred Characters ({starredCharacters.length})
           </h3>
           {starredCharacters.map(
@@ -186,7 +186,7 @@ export const CharacterList = () => {
       <div className="space-y-6">
         {starredCharacters.length > 0 && (
           <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-6">
               Starred Characters ({starredCharacters.length})
             </h3>
             {starredCharacters.map(
@@ -198,7 +198,7 @@ export const CharacterList = () => {
 
         {otherCharacters.length > 0 && (
           <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-6">
               Characters ({otherCharacters.length})
             </h3>
             {otherCharacters.map(
@@ -212,9 +212,9 @@ export const CharacterList = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50/50">
+    <div className="flex flex-col h-full ">
       {/* Search Header */}
-      <div className="p-4 bg-gray-50/50 sticky top-0 z-10">
+      <div className="p-4  sticky top-0 z-10">
         <div className="flex items-center gap-2 mb-4">
           <h1 className="text-2xl font-bold text-gray-800">
             Rick and Morty list
@@ -241,7 +241,7 @@ export const CharacterList = () => {
             </svg>
           </button>
         </div>
-        <div className="relative flex gap-2">
+        <div className="relative flex gap-2 bg-gray-100 rounded-lg">
           <div className="relative flex-1">
             <label htmlFor="search-input" className="sr-only">
               Search characters

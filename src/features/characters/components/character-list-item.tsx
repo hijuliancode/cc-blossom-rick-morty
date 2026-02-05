@@ -16,10 +16,8 @@ export const CharacterListItem = ({ character }: CharacterListItemProps) => {
     <NavLink
       to={`/characters/${character.id}`}
       className={({ isActive }) =>
-        `flex items-center gap-3 p-3 rounded-lg transition-colors border-l-4 ${
-          isActive
-            ? "bg-purple-100 border-purple-500"
-            : "bg-white hover:bg-gray-50 border-transparent"
+        `flex items-center gap-3 p-3 rounded-lg transition-colors ${
+          isActive ? "bg-purple-100 " : "bg-white hover:bg-gray-50"
         }`
       }
     >

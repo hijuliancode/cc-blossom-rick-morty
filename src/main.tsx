@@ -7,6 +7,13 @@ import { UserInteractionsProvider } from "@/context/user-interactions-provider";
 import { CharactersLayout } from "@/features/characters/layouts/characters-layout";
 import { CharacterDetail } from "@/features/characters/components/character-detail";
 import { NotFoundPage } from "@/shared/components/not-found-page";
+
+// Nunito weights
+import "@fontsource/nunito/400.css";
+import "@fontsource/nunito/500.css";
+import "@fontsource/nunito/600.css";
+import "@fontsource/nunito/700.css";
+import "@fontsource/nunito/800.css";
 import "@/rick-morty.css";
 
 createRoot(document.getElementById("root")!).render(

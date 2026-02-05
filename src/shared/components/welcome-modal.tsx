@@ -36,14 +36,22 @@ export const WelcomeModal = ({ isOpen, onClose }: WelcomeModalProps) => {
 
           {/* Right Column: Content */}
           <div className="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
               ¡Bienvenido a Rick and Morty App! 👋
             </h2>
 
-            <div className="space-y-4 text-gray-600 mb-8 flex-1">
+            <div className="space-y-4 text-gray-600 mb-8 flex-1 font-medium">
               <p>
                 Este proyecto ha sido desarrollado como parte de una prueba
-                técnica para <strong>Bloom</strong>.
+                técnica para{" "}
+                <a
+                  href="https://www.blossom.net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-600 hover:text-purple-700 font-medium hover:underline"
+                >
+                  <strong>Blossom</strong>.
+                </a>
               </p>
 
               <p>
@@ -58,19 +66,19 @@ export const WelcomeModal = ({ isOpen, onClose }: WelcomeModalProps) => {
                   🤖 Potenciado por IA
                 </h3>
                 <p className="text-sm text-purple-800">
-                  Para acelerar el desarrollo, hemos utilizado agentes de IA y
+                  Para potenciar el desarrollo, hemos utilizado agentes de IA y
                   "skills" especializados. Si te interesa la parte técnica,
-                  puedes consultar el archivo <code>README.md</code> o el
+                  puedes consultar el archivo <code>README.md</code> en el
                   repositorio.
                 </p>
               </div>
 
-              <div className="pt-2">
+              <div className="">
                 <a
                   href="https://github.com/hijuliancode/cc-blossom-rick-morty"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium hover:underline"
+                  className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium hover:underline mt-auto"
                 >
                   <svg
                     className="w-5 h-5"
