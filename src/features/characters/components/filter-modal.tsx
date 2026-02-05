@@ -39,6 +39,20 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
   );
   const [sortOrder, setSortOrder] = useState(searchParams.get("sort") || "");
 
+  const hasFilters =
+    status !== "" ||
+    species !== "" ||
+    gender !== "" ||
+    filterType !== "all" ||
+    sortOrder !== "";
+
+  const hasUrlFilters =
+    searchParams.has("status") ||
+    searchParams.has("species") ||
+    searchParams.has("gender") ||
+    (searchParams.has("filter") && searchParams.get("filter") !== "all") ||
+    searchParams.has("sort");
+
   const handleApplyFilters = () => {
     const newParams = new URLSearchParams(searchParams);
 
@@ -62,7 +76,6 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     onClose();
   };
 
-  /*
   const handleClearFilters = () => {
     setStatus("");
     setSpecies("");
@@ -70,14 +83,13 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
     setFilterType("all");
     setSortOrder("");
   };
-  */
 
   if (!isOpen) return null;
 
   return (
     <>
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      <div className="absolute top-12 right-0 z-50 w-80 bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200">
+      <div className="absolute top-12 right-0 z-50 w-80 max-h-[80vh] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100 p-6 animate-in fade-in zoom-in-95 duration-200">
         <div className="space-y-6">
           {/* Character Type */}
           <div>
@@ -204,13 +216,25 @@ export const FilterModal = ({ isOpen, onClose }: FilterModalProps) => {
           </div>
 
           {/* Filter Action Button */}
-          <div className="pt-4">
+          <div className="pt-4 space-y-3">
             <button
               onClick={handleApplyFilters}
-              className="w-full py-3 bg-gray-100 text-gray-900 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+              className={`w-full py-3 font-medium rounded-lg transition-colors ${
+                hasFilters || hasUrlFilters
+                  ? "bg-purple-100 text-purple-700 hover:bg-purple-200"
+                  : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+              }`}
             >
               Filter
             </button>
+            {hasFilters && (
+              <button
+                onClick={handleClearFilters}
+                className="w-full py-3 text-gray-500 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         </div>
       </div>
