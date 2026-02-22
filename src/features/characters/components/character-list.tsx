@@ -252,12 +252,10 @@ export const CharacterList = () => {
                 <line x1="17" y1="16" x2="23" y2="16"></line>
               </svg>
             </button>
-            {isFilterOpen && (
-              <FilterModal
-                isOpen={isFilterOpen}
-                onClose={() => setIsFilterOpen(false)}
-              />
-            )}
+            <FilterModal
+              isOpen={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+            />
           </div>
         </div>
       </div>
